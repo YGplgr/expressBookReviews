@@ -115,5 +115,41 @@ public_users.get("/server/asyncbookslist/isbn/:isbn", function (req,res) {
         return res.status(500).json({message: "Error while fetching book details."})
     })
 });
+//Get book details by Author Task 12
+public_users.get("/server/asyncbookslist/author/:author", function (req,res) {
+
+    let author = req.params.author;
+    if (!author) {
+        return res.status(400).json({ message: "author is required" });}
+
+    axios.get(`http://localhost:5000/author/${author}`)
+    .then(function(response){
+      return res.status(200).json(response.data);
+    })
+    .catch(function (error) {
+        console.error("Error fetching book details:", error.message || error.response?.data || error);
+        return res.status(500).json({ message: "Can't fetching book details." });
+    });
+    
+});
+
+
+//Get book details by title Task 13
+public_users.get("/server/asyncbookslist/title/:title", function (req,res) {
+
+    let title = req.params.title;
+    if (!title) {
+        return res.status(400).json({ message: "title is required" });}
+
+    axios.get(`http://localhost:5000/title/${title}`)
+    .then(function(response){
+      return res.status(200).json(response.data);
+    })
+    .catch(function (error) {
+        console.error("Error fetching book details:", error.message || error.response?.data || error);
+        return res.status(500).json({ message: "Can't fetching book details." });
+    });
+    
+});
 
 module.exports.general = public_users;
