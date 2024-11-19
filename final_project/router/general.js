@@ -3,6 +3,8 @@ let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
+const axios = require('axios');
+const { json } = require('express');
 
 
 public_users.post("/register", (req,res) => {
@@ -23,6 +25,19 @@ public_users.post("/register", (req,res) => {
 public_users.get('/',function (req, res) {
  res.send(JSON.stringify(books, null, 4));
   //return res.status(300).json({message: "Yet to be implemented"});
+});
+
+
+//Add the code for getting the list of books available in the shop (done in Task 1) using async-await with Axios.
+public_users.get("/server/asynbooks", async function (req,res) {
+  try {
+    let response = await axios.get("http://localhost:5000/books");
+    return res.status(200).json(response.data);
+    
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({message: "Error getting book list"});
+  }
 });
 
 // Get book details based on ISBN
