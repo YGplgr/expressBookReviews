@@ -24,21 +24,9 @@ public_users.post("/register", (req,res) => {
 // Get the book list available in the shop
 public_users.get('/',function (req, res) {
  res.send(JSON.stringify(books, null, 4));
-  //return res.status(300).json({message: "Yet to be implemented"});
 });
 
 
-//Add the code for getting the list of books available in the shop (done in Task 1) using async-await with Axios.
-public_users.get("/server/asynbooks", async function (req,res) {
-  try {
-    let response = await axios.get("http://localhost:5000/books");
-    return res.status(200).json(response.data);
-    
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({message: "Error getting book list"});
-  }
-});
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn',function (req, res) {
@@ -96,5 +84,36 @@ public_users.get('/review/:isbn',function (req, res) {
         return res.status(404).json({ message: "Book not found" });
     }
  });
+
+
+//Add the code for getting the list of books available in the shop Task 10.
+public_users.get("/server/asyncbookslist", async function (req,res) {
+    try {
+      //let response = books;
+      let response = await axios.get("http://localhost:5000/")
+      return res.status(200).json(response.data);
+      
+    } catch (error) {
+      cconsole.error("Error fetching books:", error.message || error.response?.data || error);
+      return res.status(500).json({message: "Error getting book list"});
+    }
+  });
+  
+
+  //Get book details by ISBN Task 11
+public_users.get("/server/asyncbookslist/isbn/:isbn", function (req,res) {
+
+    let isbn = req.params.isbn;
+    if (!isbn) {
+        return res.status(400).json({ message: "ISBN is required" });}
+
+    axios.get(`http://localhost:5000/isbn/${isbn}`)
+    .then(function(response){
+      return res.status(200).json(response.data);
+    })
+    .catch(function(error){
+        return res.status(500).json({message: "Error while fetching book details."})
+    })
+});
 
 module.exports.general = public_users;
